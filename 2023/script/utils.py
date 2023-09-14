@@ -1,7 +1,5 @@
-import pandas as pd
-import pm4py
-import matplotlib.pyplot as plt
 from IPython.display import HTML, display
+import pm4py
 import warnings
 warnings.filterwarnings("ignore")
 
