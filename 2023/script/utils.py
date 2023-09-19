@@ -1,8 +1,10 @@
 from IPython.display import HTML, display
 import pm4py
 import numpy as np
-import matplotlib.pyplot as plt
+import pandas as pd
 import seaborn as sns
+import matplotlib.pyplot as plt
+import humanize
 import warnings
 warnings.filterwarnings("ignore")
 """
@@ -14,7 +16,7 @@ def draw_dfg_perf_matrix(
   case_var: str = "case:concept:name", 
   activity_var: str = "concept:name", 
   timestamp_var: str = "time:timestamp",
-  # Use 'h' for hours, 's' for seconds, 'D' for days and 'W' for weeks
+  # Use 'h' for hours, 's' for seconds, 'D' for days, and 'W' for weeks
   duration: str ='h'):
 
   # event log
@@ -92,7 +94,7 @@ def draw_duration_boxplot(
   case_var: str = "case:concept:name", 
   event_var: str = "concept:name", 
   timestamp_var: str = "time:timestamp",
-  # Use 'h' for hours, 's' for seconds, 'D' for days and 'W' for weeks
+  # Use 'h' for hours, 's' for seconds, 'D' for days, and 'W' for weeks
   duration: str ='h'):    
   data = dict()
   duration_var = f'duration ({duration})'
