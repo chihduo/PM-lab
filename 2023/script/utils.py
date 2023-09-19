@@ -20,9 +20,9 @@ def draw_dfg(log):
   dfg, ia, fa = pm4py.discover_dfg(log)
   pm4py.view_dfg(dfg, ia, fa)
 
-def draw_proc_tree(log):
-  tree = pm4py.discovery.discover_process_tree_inductive(log)
-  pm4py.vis.view_process_tree(tree)
+def draw_proc_tree(log, noise_threshold = 0.0):
+  tree = pm4py.discover_process_tree_inductive(top_k, noise_threshold)
+  pm4py.view_process_tree(tree)
 
 def draw_heur_net(log):
   net = pm4py.discover_heuristics_net(log)
