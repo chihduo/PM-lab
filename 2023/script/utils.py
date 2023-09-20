@@ -17,7 +17,7 @@ def draw_dfg_perf_matrix(
   activity_var: str = "concept:name", 
   timestamp_var: str = "time:timestamp",
   # Use 'h' for hours, 's' for seconds, 'D' for days, and 'W' for weeks
-  duration: str ='h'):
+  time_unit: str ='h'):
 
   # event log
   log = event_log[[case_var, activity_var, timestamp_var]]
@@ -32,10 +32,10 @@ def draw_dfg_perf_matrix(
   # loop through case groups
   for group in groups:
     event = group[1].sort_values(timestamp_var)\
-    .rename(columns = {activity_var:'event_from', timestamp_var:'time_begin'})
-    event['event_to'] = event['event_from'].shift(-1)
-    event['time_end'] = event['time_begin'].shift(-1)
-    event['duration'] = (event['time_end'] - event['time_begin']) / np.timedelta64(1, duration)
+    .rename(columns = {activity_var:"event_from", timestamp_var:"time_begin"})
+    event["event_to"] = event["event_from"].shift(-1)
+    event["time_end"] = event["time_begin"].shift(-1)
+    event["duration"] = (event["time_end"] - event["time_begin"]) / np.timedelta64(1, time_unit)
     event.dropna(inplace = True)
     # loop through traces
     for row in event.itertuples(index = False):
@@ -43,8 +43,8 @@ def draw_dfg_perf_matrix(
       np.nansum([matrix.at[row.event_from, row.event_to], row.duration])
   
   matrix = matrix.astype(float)
-  sns.set(rc={'figure.figsize':(8, 6)})
-  sns.heatmap(matrix, annot=True, fmt='.0f', cmap='BuPu', square=True)
+  sns.set(rc={"figure.figsize":(8, 6)})
+  sns.heatmap(matrix, annot=True, fmt=".0f", cmap="BuPu", square=True)
   
   # Rows are source events and columns are target events
   plt.show()
@@ -71,8 +71,8 @@ def draw_dfg_freq_matrix(
   for group in groups:
       event = group[1].sort_values(timestamp_var)\
       .drop([case_var, timestamp_var], axis = 1)\
-      .rename(columns = {activity_var:'event_from'})
-      event['event_to'] = event['event_from'].shift(-1)
+      .rename(columns = {activity_var:"event_from"})
+      event["event_to"] = event["event_from"].shift(-1)
       event.dropna(inplace = True)
       
       # loop through traces
@@ -80,8 +80,8 @@ def draw_dfg_freq_matrix(
           matrix.at[trace.event_from, trace.event_to] += 1
               
   matrix = matrix.replace(0, np.nan)
-  sns.set(rc={'figure.figsize':(8, 6)})
-  sns.heatmap(matrix, annot=True, fmt='.0f', cmap='Reds', square=True)
+  sns.set(rc={"figure.figsize":(8, 6)})
+  sns.heatmap(matrix, annot=True, fmt=".0f", cmap="Reds", square=True)
 
   # Rows are source events and columns are target events
   plt.show()
@@ -95,23 +95,23 @@ def draw_duration_boxplot(
   event_var: str = "concept:name", 
   timestamp_var: str = "time:timestamp",
   # Use 'h' for hours, 's' for seconds, 'D' for days, and 'W' for weeks
-  duration: str ='h'):    
+  time_unit: str ='h'):    
   data = dict()
-  duration_var = f'duration ({duration})'
+  duration_var = f"duration ({time_unit})"
   groups = event_log.groupby(case_var)
   for group in groups:
       arc = group[1].sort_values(timestamp_var)\
-      .rename(columns = {event_var:'event_from', timestamp_var:'time_from'})
-      arc['event_to'] = arc['event_from'].shift(-1)
-      arc['time_to'] = arc['time_from'].shift(-1)
+      .rename(columns = {event_var:"event_from", timestamp_var:"time_from"})
+      arc["event_to"] = arc["event_from"].shift(-1)
+      arc["time_to"] = arc["time_from"].shift(-1)
       arc.dropna(inplace = True)
-      arc[duration_var] = (arc['time_to'] - arc['time_from']) / np.timedelta64(1, duration)
-      data[group[0]] = arc[[case_var, 'event_from', 'event_to', 'time_from', 'time_to', duration_var]]
+      arc[duration_var] = (arc["time_to"] - arc["time_from"]) / np.timedelta64(1, time_unit)
+      data[group[0]] = arc[[case_var, "event_from", "event_to", "time_from", "time_to", duration_var]]
   boxes = pd.concat(data.values()).set_index(case_var)\
-  .loc[:, ['event_from', 'event_to', duration_var]]\
+  .loc[:, ["event_from", "event_to", duration_var]]\
   .reset_index()\
-  .pivot(columns='event_from', values=duration_var)\
-  .plot(kind='box', vert=False, title='Activity duration in hours')
+  .pivot(columns="event_from", values=duration_var)\
+  .plot(kind="box", vert=False, title="Activity duration (" + time_unit + ")")
   plt.show()
 
 def align_plots(width = "80%"):
