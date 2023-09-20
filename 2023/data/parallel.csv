@@ -1,0 +1,7 @@
+case_id,timestamp,activity
+1,01:24,offline
+1,01:29,browsing
+1,01:29,printing
+2,01:52,offline
+2,02:17,printing
+2,02:17,browsing
