@@ -23,7 +23,7 @@ def draw_dfg_perf_matrix(
   log = event_log[[case_var, activity_var, timestamp_var]]
   
   # initiate matrix
-  events = log[activity_var].unique()
+  events = sorted(log[activity_var].unique())
   matrix = pd.DataFrame(columns=events, index=events)
   
   # groupby case_var
@@ -61,7 +61,7 @@ def draw_dfg_freq_matrix(
   log = event_log[[case_var, activity_var, timestamp_var]]
   
   # initiate matrix
-  events = log[activity_var].unique()
+  events = sorted(log[activity_var].unique())
   matrix = pd.DataFrame(columns=events, index=events).fillna(0)
   
   # groupby case_var
